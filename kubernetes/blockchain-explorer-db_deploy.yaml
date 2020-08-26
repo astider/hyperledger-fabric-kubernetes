@@ -22,7 +22,7 @@ spec:
         image: postgres:10.4-alpine
         env:
         - name: TZ
-          value: "America/Sao_Paulo"
+          value: "Asia/Bangkok"
         - name: DATABASE_DATABASE
           value: fabricexplorer
         - name: DATABASE_USERNAME

@@ -19,11 +19,11 @@ spec:
 
       containers:
       - name: explorer
-        image: hyperledger/explorer:0.3.7.1
+        image: hyperledger/explorer:1.1.2
         command: ["sh" , "-c" , "/fabric/config/explorer/app/run.sh"]
         env:
         - name: TZ
-          value: "America/Sao_Paulo"
+          value: "Asia/Bangkok"
         - name: DATABASE_HOST
           value: blockchain-explorer-db
         - name: DATABASE_USERNAME

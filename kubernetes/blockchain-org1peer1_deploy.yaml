@@ -22,11 +22,11 @@ spec:
 
       containers:
       - name: peer
-        image: hyperledger/fabric-peer:amd64-1.3.0
+        image: hyperledger/fabric-peer:amd64-1.4.0
         command: ["sh", "-c", "peer node start"]
         env:
         - name: TZ
-          value: "America/Sao_Paulo"
+          value: "Asia/Bangkok"
         - name: CORE_PEER_ADDRESSAUTODETECT
           value: "true"
         - name: CORE_PEER_NETWORKID
@@ -112,7 +112,7 @@ spec:
         image: hyperledger/fabric-couchdb:amd64-0.4.14
         env:
         - name: TZ
-          value: "America/Sao_Paulo"
+          value: "Asia/Bangkok"
         - name: COUCHDB_USER
           value: "hyperledgeruser"
         - name: COUCHDB_PASSWORD
