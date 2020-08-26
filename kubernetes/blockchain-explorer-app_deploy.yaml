@@ -1,9 +1,12 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: blockchain-explorer-app
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: explorer
   template:
     metadata:
       labels:
@@ -16,7 +19,7 @@ spec:
 
       containers:
       - name: explorer
-        image: hyperledger/explorer:latest
+        image: hyperledger/explorer:0.3.7.1
         command: ["sh" , "-c" , "/fabric/config/explorer/app/run.sh"]
         env:
         - name: TZ

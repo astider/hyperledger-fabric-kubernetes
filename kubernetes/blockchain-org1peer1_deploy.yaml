@@ -1,9 +1,12 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: blockchain-org1peer1
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: org1peer1
   template:
     metadata:
       labels:
@@ -98,6 +101,8 @@ spec:
           value: "netdns=go"
         - name: CORE_VM_DOCKER_ATTACHSTDOUT
           value: "true"
+        - name: CORE_CHAINCODE_BUILDER
+          value: "hyperledger/fabric-ccenv:1.3.0"
         volumeMounts:
         - mountPath: /fabric
           name: fabricfiles
