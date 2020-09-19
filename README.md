@@ -2001,6 +2001,7 @@ exit
 
 - Org1MSP  
 Let's install our chaincode on Org1MSP Peers:
+- Note: if you're not using Go for chaincode, you need to use -l flag to specify language. For example: '-l node' for JavaScript.
 ```sh
 kubectl exec -it fabric-tools -- /bin/bash
 cp -r /fabric/config/chaincode $GOPATH/src/

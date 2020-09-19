@@ -14,5 +14,6 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: /nfs/fabric
-    server: storage.local.parisi.biz
+    # server: storage.local.parisi.biz
+    server: 192.168.0.31
     readOnly: false

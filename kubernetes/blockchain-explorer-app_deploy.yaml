@@ -19,7 +19,7 @@ spec:
 
       containers:
       - name: explorer
-        image: hyperledger/explorer:1.1.2
+        image: hyperledger/explorer:0.3.8
         command: ["sh" , "-c" , "/fabric/config/explorer/app/run.sh"]
         env:
         - name: TZ
