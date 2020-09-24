@@ -13,13 +13,16 @@ spec:
         name: explorer-db
     spec:
       volumes:
-      - name: fabricfiles
+      - name: nfs-volume
         persistentVolumeClaim:
-          claimName: fabric-pvc
+          claimName: nfs-volume-claim
 
       containers:
       - name: postgres
         image: postgres:10.4-alpine
+        # resources:
+        #   requests:
+        #     cpu: 10m
         env:
         - name: TZ
           value: "Asia/Bangkok"
@@ -31,4 +34,4 @@ spec:
           value: password
         volumeMounts:
         - mountPath: /fabric
-          name: fabricfiles
+          name: nfs-volume

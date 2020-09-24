@@ -13,16 +13,19 @@ spec:
         name: org1peer1
     spec:
       volumes:
-      - name: fabricfiles
+      - name: nfs-volume
         persistentVolumeClaim:
-          claimName: fabric-pvc
+          claimName: nfs-volume-claim
       - name: dockersocket
         hostPath:
           path: /var/run/docker.sock
 
       containers:
       - name: peer
-        image: hyperledger/fabric-peer:amd64-1.3.0
+        image: hyperledger/fabric-peer:amd64-1.4.2
+        # resources:
+        #   requests:
+        #     cpu: 200m
         command: ["sh", "-c", "peer node start"]
         env:
         - name: TZ
@@ -101,11 +104,13 @@ spec:
           value: "netdns=go"
         - name: CORE_VM_DOCKER_ATTACHSTDOUT
           value: "true"
+        - name: CC_SRC_PATH
+          value: "/opt/gopath/src/"
         - name: CORE_CHAINCODE_BUILDER
-          value: "hyperledger/fabric-ccenv:amd64-1.3.0"
+          value: "hyperledger/fabric-ccenv:amd64-1.4.2"
         volumeMounts:
         - mountPath: /fabric
-          name: fabricfiles
+          name: nfs-volume
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb

@@ -13,13 +13,16 @@ spec:
         name: explorer
     spec:
       volumes:
-      - name: fabricfiles
+      - name: nfs-volume
         persistentVolumeClaim:
-          claimName: fabric-pvc
+          claimName: nfs-volume-claim
 
       containers:
       - name: explorer
         image: hyperledger/explorer:0.3.8
+        # resources:
+        #   requests:
+        #     cpu: 10m
         command: ["sh" , "-c" , "/fabric/config/explorer/app/run.sh"]
         env:
         - name: TZ
@@ -32,4 +35,4 @@ spec:
           value: password
         volumeMounts:
         - mountPath: /fabric
-          name: fabricfiles
+          name: nfs-volume

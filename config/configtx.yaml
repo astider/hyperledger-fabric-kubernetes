@@ -34,6 +34,32 @@ Orderer: &OrdererDefaults
     #         - kafka2.local.parisi.biz:9092
     #         - kafka3.local.parisi.biz:9092
     #         - kafka4.local.parisi.biz:9092
+    EtcdRaft:
+        # The set of Raft replicas for this network. For the etcd/raft-based
+        # implementation, we expect every replica to also be an OSN. Therefore,
+        # a subset of the host:port items enumerated in this list should be
+        # replicated under the Orderer.Addresses key above.
+        Consenters:
+            - Host: blockchain-orderer
+              Port: 31010
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            - Host: blockchain-orderer2
+              Port: 31010
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+            - Host: blockchain-orderer3
+              Port: 31010
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+            - Host: blockchain-orderer4
+              Port: 31010
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+            - Host: blockchain-orderer5
+              Port: 31010
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
 
     Organizations:
 
@@ -58,4 +84,4 @@ Profiles:
             <<: *ApplicationDefaults
             Organizations:
                 - *Org1
-
+    
