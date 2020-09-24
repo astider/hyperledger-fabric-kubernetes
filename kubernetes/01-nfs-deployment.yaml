@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: nfs-server-persistent-disk
           gcePersistentDisk:
-            pdName: nfs-server-disk
+            pdName: nfs-disk
             fsType: ext4
 ---
 kind: Service

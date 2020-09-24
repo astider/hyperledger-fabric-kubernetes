@@ -40,16 +40,16 @@ let Chaincode = class {
 
   async queryRecord(stub, args) {
     if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting CarNumber ex: CAR01');
+      throw new Error('Incorrect number of arguments. Expecting Round ex: 20200101-06');
     }
     let recordKey = args[0];
 
-    let carAsBytes = await stub.getState(recordKey); //get the car from chaincode state
-    if (!carAsBytes || carAsBytes.toString().length <= 0) {
+    let roundData = await stub.getState(recordKey); //get the car from chaincode state
+    if (!roundData || roundData.toString().length <= 0) {
       throw new Error(recordKey + ' does not exist: ');
     }
-    console.log(carAsBytes.toString());
-    return carAsBytes;
+    console.log(roundData.toString());
+    return roundData;
   }
 
   async addRecord(stub, args) {
@@ -58,16 +58,18 @@ let Chaincode = class {
       throw new Error('Incorrect number of arguments. Expecting 2');
     }
 
-    // args[1] is round
-    // args[2] is stringified value
+    // args[0] is round
+    // args[1] is stringified value
+    const round = args[0];
+    const value = args[1];
+    const queryExistRound = await stub.getState(round);
+    if (queryExistRound.toString().length > 0) {
+      throw new Error(`Round [${round}] already exists!`);
+    }
 
-    var record = {
-      round: args[1],
-      value: args[2],
-    };
-
-    await stub.putState(args[0], Buffer.from(JSON.stringify(record)));
+    await stub.putState(args[0], Buffer.from(value));
     console.info('============= END : Add Record ===========');
+    return 'Add Record Successfully';
   }
 
   // async queryAllCars(stub, args) {
@@ -103,19 +105,6 @@ let Chaincode = class {
   //   }
   // }
 
-  // async changeCarOwner(stub, args) {
-  //   console.info('============= START : changeCarOwner ===========');
-  //   if (args.length != 2) {
-  //     throw new Error('Incorrect number of arguments. Expecting 2');
-  //   }
-
-  //   let carAsBytes = await stub.getState(args[0]);
-  //   let car = JSON.parse(carAsBytes);
-  //   car.owner = args[1];
-
-  //   await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
-  //   console.info('============= END : changeCarOwner ===========');
-  // }
 };
 
 shim.start(new Chaincode());
