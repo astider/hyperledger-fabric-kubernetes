@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-explorer-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: explorer-db
+  template:
+    metadata:
+      labels:
+        name: explorer-db
+    spec:
+      volumes:
+      - name: nfs-volume
+        persistentVolumeClaim:
+          claimName: production-nfs-volume-claim
+
+      containers:
+      - name: postgres
+        image: postgres:10.4-alpine
+        # resources:
+        #   requests:
+        #     cpu: 10m
+        env:
+        - name: TZ
+          value: "Asia/Bangkok"
+        - name: DATABASE_DATABASE
+          value: fabricexplorer
+        - name: DATABASE_USERNAME
+          value: hppoc
+        - name: DATABASE_PASSWORD
+          value: password
+        volumeMounts:
+        - mountPath: /fabric
+          name: nfs-volume
