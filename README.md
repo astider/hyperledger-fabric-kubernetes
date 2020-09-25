@@ -418,19 +418,20 @@ Now we're going to copy the artifacts to the correct path and generate the genes
 kubectl exec -it fabric-tools -- /bin/bash
 cp /fabric/config/configtx.yaml /fabric/
 cd /fabric
-configtxgen -profile FourOrgsOrdererGenesis -outputBlock genesis.block
+configtxgen -profile OneOrgsOrdererGenesis -outputBlock genesis.block
 exit
 ``` 
 
 3 - Anchor Peers  
+(We deploy only one org)
 Lets create the Anchor Peers configuration files using configtxgen: 
 ```sh
 kubectl exec -it fabric-tools -- /bin/bash
 cd /fabric
-configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org1MSPanchors.tx -channelID channel1 -asOrg Org1MSP
-configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org2MSPanchors.tx -channelID channel1 -asOrg Org2MSP
-configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org3MSPanchors.tx -channelID channel1 -asOrg Org3MSP
-configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org4MSPanchors.tx -channelID channel1 -asOrg Org4MSP
+configtxgen -profile OneOrgsChannel -outputAnchorPeersUpdate ./Org1MSPanchors.tx -channelID channel1 -asOrg Org1MSP
+# configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org2MSPanchors.tx -channelID channel1 -asOrg Org2MSP
+# configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org3MSPanchors.tx -channelID channel1 -asOrg Org3MSP
+# configtxgen -profile FourOrgsChannel -outputAnchorPeersUpdate ./Org4MSPanchors.tx -channelID channel1 -asOrg Org4MSP
 exit
 ```
 *Note: The generated files will be used later to update channel configuration with the respective Anchor Peers. This step is important for Hyperledger Fabric Service Discovery to work properly.*   
@@ -1882,7 +1883,7 @@ Now its time to create our channel:
 kubectl exec -it fabric-tools -- /bin/bash
 export CHANNEL_NAME="channel1"
 cd /fabric
-configtxgen -profile FourOrgsChannel -outputCreateChannelTx ${CHANNEL_NAME}.tx -channelID ${CHANNEL_NAME}
+configtxgen -profile OneOrgChannel -outputCreateChannelTx ${CHANNEL_NAME}.tx -channelID ${CHANNEL_NAME}
 
 export ORDERER_URL="blockchain-orderer:31010"
 export CORE_PEER_ADDRESSAUTODETECT="false"
@@ -1914,11 +1915,11 @@ peer channel join -b ${CHANNEL_NAME}_newest.block
 
 rm -rf /${CHANNEL_NAME}_newest.block
 
-export CORE_PEER_ADDRESS="blockchain-org1peer2:30110"
-peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME}
-peer channel join -b ${CHANNEL_NAME}_newest.block
+# export CORE_PEER_ADDRESS="blockchain-org1peer2:30110"
+# peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME}
+# peer channel join -b ${CHANNEL_NAME}_newest.block
 
-rm -rf /${CHANNEL_NAME}_newest.block
+# rm -rf /${CHANNEL_NAME}_newest.block
 exit
 ```
 - Org2MSP  
@@ -2004,7 +2005,10 @@ Let's install our chaincode on Org1MSP Peers:
 - Note: if you're not using Go for chaincode, you need to use -l flag to specify language. For example: '-l node' for JavaScript.
 ```sh
 kubectl exec -it fabric-tools -- /bin/bash
-cp -r /fabric/config/chaincode $GOPATH/src/
+cp -r /fabric/config/chaincode /chaincode
+cd /chaincode/recordjs
+npm install
+
 export CHAINCODE_NAME="cc"
 export CHAINCODE_VERSION="1.0"
 export FABRIC_CFG_PATH="/etc/hyperledger/fabric"
@@ -2012,10 +2016,10 @@ export CORE_PEER_MSPCONFIGPATH="/fabric/crypto-config/peerOrganizations/org1.exa
 export CORE_PEER_LOCALMSPID="Org1MSP"
 
 export CORE_PEER_ADDRESS="blockchain-org1peer1:30110"
-peer chaincode install -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -p chaincode_example02/
+peer chaincode install -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -p /chaincode/recordjs/ -l node
 
-export CORE_PEER_ADDRESS="blockchain-org1peer2:30110"
-peer chaincode install -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -p chaincode_example02/
+# export CORE_PEER_ADDRESS="blockchain-org1peer2:30110"
+# peer chaincode install -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -p chaincode_example02/
 
 exit
 ```
@@ -2091,7 +2095,8 @@ export CORE_PEER_LOCALMSPID="Org1MSP"
 export CORE_PEER_ADDRESS="blockchain-org1peer1:30110"
 export ORDERER_URL="blockchain-orderer:31010"
 
-peer chaincode instantiate -o ${ORDERER_URL} -C ${CHANNEL_NAME} -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -P "AND('Org1MSP.member','Org2MSP.member','Org3MSP.member','Org4MSP.member')" -c '{"Args":["init","a","300","b","600"]}'
+peer chaincode instantiate -o ${ORDERER_URL} -C ${CHANNEL_NAME} -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -P "AND('Org1MSP.member')" -c '{"Args":[]}' -l node
+# peer chaincode instantiate -o ${ORDERER_URL} -C ${CHANNEL_NAME} -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -P "AND('Org1MSP.member','Org2MSP.member','Org3MSP.member','Org4MSP.member')" -c '{"Args":["init","a","300","b","600"]}'
 exit
 ```
 *Note: The policy -P is set using AND. This will set the policy in a way that at least 1 peer from each Org will need to endorse the transaction.*  
@@ -2105,14 +2110,14 @@ Now we need to update our channel configuration to reflect our Anchor Peers:
 pod=$(kubectl get pods | grep blockchain-org1peer1 | awk '{print $1}')
 kubectl exec -it $pod -- peer channel update -f /fabric/Org1MSPanchors.tx -c channel1 -o blockchain-orderer:31010 
 
-pod=$(kubectl get pods | grep blockchain-org2peer1 | awk '{print $1}')
-kubectl exec -it $pod -- peer channel update -f /fabric/Org2MSPanchors.tx -c channel1 -o blockchain-orderer:31010
+# pod=$(kubectl get pods | grep blockchain-org2peer1 | awk '{print $1}')
+# kubectl exec -it $pod -- peer channel update -f /fabric/Org2MSPanchors.tx -c channel1 -o blockchain-orderer:31010
 
-pod=$(kubectl get pods | grep blockchain-org3peer1 | awk '{print $1}')
-kubectl exec -it $pod -- peer channel update -f /fabric/Org3MSPanchors.tx -c channel1 -o blockchain-orderer:31010
+# pod=$(kubectl get pods | grep blockchain-org3peer1 | awk '{print $1}')
+# kubectl exec -it $pod -- peer channel update -f /fabric/Org3MSPanchors.tx -c channel1 -o blockchain-orderer:31010
 
-pod=$(kubectl get pods | grep blockchain-org4peer1 | awk '{print $1}')
-kubectl exec -it $pod -- peer channel update -f /fabric/Org4MSPanchors.tx -c channel1 -o blockchain-orderer:31010 
+# pod=$(kubectl get pods | grep blockchain-org4peer1 | awk '{print $1}')
+# kubectl exec -it $pod -- peer channel update -f /fabric/Org4MSPanchors.tx -c channel1 -o blockchain-orderer:31010 
 ```
 *Note: This step is very important for the Hyperledger Fabric Service Discovery to work properly.*  
 *Note: For each organization we only need to execute the peer channel update once.*  
@@ -2492,9 +2497,9 @@ Now, we're going to run 2 transactions. The first one we'll move 50 from `A` to 
 pod=$(kubectl get pods | grep blockchain-org1peer1 | awk '{print $1}')
 kubectl exec -it $pod -- /bin/bash
 
-peer chaincode invoke --peerAddresses blockchain-org1peer1:30110 --peerAddresses blockchain-org2peer1:30110 --peerAddresses blockchain-org3peer1:30110 --peerAddresses blockchain-org4peer1:30110 -o blockchain-orderer:31010 -C channel1 -n cc -c '{"Args":["invoke","a","b","50"]}'
+peer chaincode invoke --peerAddresses blockchain-org1peer1:30110 -o blockchain-orderer:31010 -C channel1 -n cc -c '{"Args":["invoke","a","b","50"]}'
 
-peer chaincode invoke --peerAddresses blockchain-org1peer1:30110 --peerAddresses blockchain-org2peer1:30110 --peerAddresses blockchain-org3peer1:30110 --peerAddresses blockchain-org4peer1:30110 -o blockchain-orderer:31010 -C channel1 -n cc -c '{"Args":["invoke","b","a","33"]}'
+# peer chaincode invoke --peerAddresses blockchain-org1peer1:30110 --peerAddresses blockchain-org2peer1:30110 --peerAddresses blockchain-org3peer1:30110 --peerAddresses blockchain-org4peer1:30110 -o blockchain-orderer:31010 -C channel1 -n cc -c '{"Args":["invoke","b","a","33"]}'
 
 exit
 ```

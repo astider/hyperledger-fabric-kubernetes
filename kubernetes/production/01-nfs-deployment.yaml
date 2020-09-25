@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nfs-server
+  name: production-nfs-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nfs-server
+      app: production-nfs-server
   template:
     metadata:
       labels:
-        app: nfs-server
+        app: production-nfs-server
     spec:
       containers:
-      - name: nfs-server
+      - name: production-nfs-server
         image: k8s.gcr.io/volume-nfs:0.8
         ports:
           - name: nfs
@@ -26,17 +26,17 @@ spec:
           privileged: true
         volumeMounts:
           - mountPath: /exports
-            name: nfs-server-persistent-disk
+            name: production-nfs-server-persistent-disk
       volumes:
-        - name: nfs-server-persistent-disk
+        - name: production-nfs-server-persistent-disk
           gcePersistentDisk:
-            pdName: nfs-disk
+            pdName: production-nfs-disk
             fsType: ext4
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: nfs-server
+  name: production-nfs-server
 spec:
   ports:
     - name: nfs
@@ -46,4 +46,4 @@ spec:
     - name: rpcbind
       port: 111
   selector:
-    app: nfs-server
+    app: production-nfs-server
