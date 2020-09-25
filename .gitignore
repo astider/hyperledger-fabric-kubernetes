@@ -1,1 +1,2 @@
 config/chaincode/js/node_modules/*
+application/node_modules/*
