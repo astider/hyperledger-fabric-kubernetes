@@ -10,17 +10,17 @@ const path = require('path');
 const ccpPath = path.resolve(__dirname, 'config.json');
 
 async function main() {
+    const theUser = 'user260917';
     try {
-
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
-        const userExists = await wallet.exists('user1');
+        const userExists = await wallet.exists(theUser);
         if (userExists) {
-            console.log('An identity for the user "user1" already exists in the wallet');
+            console.log(`An identity for the user "${theUser}" already exists in the wallet`);
             return;
         }
 
@@ -41,14 +41,14 @@ async function main() {
         const adminIdentity = gateway.getCurrentIdentity();
 
         // Register the user, enroll the user, and import the new identity into the wallet.
-        const secret = await ca.register({ affiliation: 'org1.department1', enrollmentID: 'user1', role: 'client' }, adminIdentity);
-        const enrollment = await ca.enroll({ enrollmentID: 'user1', enrollmentSecret: secret });
+        const secret = await ca.register({ affiliation: 'org1.department1', enrollmentID: theUser, role: 'client' }, adminIdentity);
+        const enrollment = await ca.enroll({ enrollmentID: theUser, enrollmentSecret: secret });
         const userIdentity = X509WalletMixin.createIdentity('Org1MSP', enrollment.certificate, enrollment.key.toBytes());
-        await wallet.import('user1', userIdentity);
-        console.log('Successfully registered and enrolled admin user "user1" and imported it into the wallet');
+        await wallet.import(theUser, userIdentity);
+        console.log(`Successfully registered and enrolled admin user "${theUser}" and imported it into the wallet`);
 
     } catch (error) {
-        console.error(`Failed to register user "user1": ${error}`);
+        console.error(`Failed to register user "${theUser}": ${error}`);
         process.exit(1);
     }
 }
