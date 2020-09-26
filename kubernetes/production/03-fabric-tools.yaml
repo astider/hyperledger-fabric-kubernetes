@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: fabric-tools
+  name: production-fabric-tools
 spec:
   volumes:
   - name: nfs-volume
     persistentVolumeClaim:
-      claimName: nfs-volume-claim
+      claimName: production-nfs-volume-claim
   - name: dockersocket
     hostPath:
       path: /var/run/docker.sock

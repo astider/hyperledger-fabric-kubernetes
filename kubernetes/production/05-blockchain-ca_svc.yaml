@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: blockchain-ca
+  name: production-blockchain-ca
   labels:
-    run: blockchain-ca
+    run: production-blockchain-ca
 spec:
   type: ClusterIP
   selector:
-    name: ca
+    name: production-ca
   ports:
   - protocol: TCP
     port: 30054

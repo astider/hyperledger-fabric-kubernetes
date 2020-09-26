@@ -15,7 +15,7 @@ spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: nfs-volume-claim
+          claimName: production-nfs-volume-claim
 
       containers:
       - name: postgres

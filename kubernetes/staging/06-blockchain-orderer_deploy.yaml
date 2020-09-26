@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blockchain-orderer
+  name: staging-blockchain-orderer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: orderer
+      name: staging-orderer
   template:
     metadata:
       labels:
-        name: orderer
+        name: staging-orderer
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: nfs-volume-claim
+          claimName: staging-nfs-volume-claim
 
       containers:
       - name: orderer
@@ -50,7 +50,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "blockchain-orderer:31010"
+          value: "staging-blockchain-orderer:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT

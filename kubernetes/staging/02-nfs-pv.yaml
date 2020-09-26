@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: staging-nfs-volume
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: staging-nfs-server.default.svc.cluster.local
+    path: "/"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: staging-nfs-volume-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: staging-nfs-volume

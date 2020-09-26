@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blockchain-org1peer1
+  name: production-blockchain-org1peer1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: org1peer1
+      name: production-org1peer1
   template:
     metadata:
       labels:
-        name: org1peer1
+        name: production-org1peer1
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: nfs-volume-claim
+          claimName: production-nfs-volume-claim
       - name: dockersocket
         hostPath:
           path: /var/run/docker.sock
@@ -35,19 +35,19 @@ spec:
         - name: CORE_PEER_NETWORKID
           value: nid1
         - name: CORE_PEER_ID
-          value: blockchain-org1peer1
+          value: production-blockchain-org1peer1
         - name: CORE_PEER_ADDRESS
-          value: blockchain-org1peer1:30110
+          value: production-blockchain-org1peer1:30110
         - name: CORE_PEER_LISTENADDRESS
           value: 0.0.0.0:30110
         - name: CORE_PEER_EVENTS_ADDRESS
           value: 0.0.0.0:30111
         - name: CORE_PEER_GOSSIP_BOOTSTRAP
-          value: blockchain-org1peer1:30110
+          value: production-blockchain-org1peer1:30110
         - name: CORE_PEER_GOSSIP_ENDPOINT
-          value: blockchain-org1peer1:30110
+          value: production-blockchain-org1peer1:30110
         - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
-          value: blockchain-org1peer1:30110
+          value: production-blockchain-org1peer1:30110
         - name: CORE_PEER_GOSSIP_ORGLEADER
           value: "false"
         - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
@@ -99,7 +99,7 @@ spec:
         - name: FABRIC_CFG_PATH
           value: /etc/hyperledger/fabric/
         - name: ORDERER_URL
-          value: blockchain-orderer:31010
+          value: production-blockchain-orderer:31010
         - name: GODEBUG
           value: "netdns=go"
         - name: CORE_VM_DOCKER_ATTACHSTDOUT

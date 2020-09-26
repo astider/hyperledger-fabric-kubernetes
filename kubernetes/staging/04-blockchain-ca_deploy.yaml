@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blockchain-ca
+  name: staging-blockchain-ca
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: ca
+      name: staging-ca
   template:
     metadata:
       labels:
-        name: ca
+        name: staging-ca
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: nfs-volume-claim
+          claimName: staging-nfs-volume-claim
 
       containers:
       - name: ca
