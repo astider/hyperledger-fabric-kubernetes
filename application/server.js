@@ -1,7 +1,8 @@
 const express = require('express');
-const { Router } = express;
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
+const { Router } = express;
 const app = express();
 const router = Router();
 
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 })
 
 app.use(bodyParser.json({ limit: '50mb' }));
+app.use(morgan('combined'));
 
 app.use('/',
   router.get('/record/:round', query),
