@@ -678,12 +678,21 @@ kubectl apply -f kubernetes/blockchain-explorer-app_deploy.yaml
 ## Start the application and REST API
 Copy the application code to our shared filesystem.
 ```sh
-kubectl cp ./config/application/ fabric-tools:/fabric/config/
+# Prod
+kubectl cp ./config/application/ production-fabric-tools:/fabric/config/
+
+# Staging
+kubectl cp ./config/application/ staging-fabric-tools:/fabric/config/
 ```
 
 Use fabric-tools to get inside (exec bash) and set the permission
 ```sh
-kubectl exec -it fabric-tools -- /bin/bash
+# Prod
+kubectl exec -it production-fabric-tools -- /bin/bash
+
+# Staging
+kubectl exec -it production-fabric-tools -- /bin/bash
+
 chmod a+rx /fabric/config/application/run.sh
 exit
 ```

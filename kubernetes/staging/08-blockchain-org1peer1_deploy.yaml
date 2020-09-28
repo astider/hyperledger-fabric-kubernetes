@@ -26,7 +26,11 @@ spec:
         # resources:
         #   requests:
         #     cpu: 200m
-        command: ["sh", "-c", "peer node start"]
+        command: ["sh", "-c", "/fabric/peer_start_staging.sh"]
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["sh", "-c", "/fabric/peer_start_staging.sh"]
         env:
         - name: TZ
           value: "Asia/Bangkok"

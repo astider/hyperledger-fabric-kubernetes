@@ -26,7 +26,7 @@ spec:
         # resources:
         #   requests:
         #     cpu: 200m
-        command: ["sh", "-c", "peer node start"]
+        command: ["sh", "-c", "/fabric/peer_start_production.sh"]
         env:
         - name: TZ
           value: "Asia/Bangkok"
