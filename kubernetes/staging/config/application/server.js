@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 })
 
 app.use(bodyParser.json({ limit: '50mb' }));
+app.use(morgan('combined'));
 
 app.use('/',
   router.get('/record/:round', query),
