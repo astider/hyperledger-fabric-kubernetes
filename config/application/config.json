@@ -1,0 +1,68 @@
+{
+  "name": "record-network",
+  "version": "1.0.0",
+  "client": {
+    "tlsEnable": false,
+    "organization": "Org1",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "channels": {
+    "channel1": {
+      "peers": {
+        "blockchain-org1peer1": {}
+      },
+      "orderers": {
+        "blockchain-orderer" : {}
+      }
+    }
+  },
+  "organizations": {
+    "Org1": {
+      "mspid": "Org1MSP",
+      "peers": [
+          "blockchain-org1peer1"
+      ],
+      "certificateAuthorities": [
+          "CA1"
+      ]
+    },
+    "OrdererMSP": {
+      "mspid": "OrdererMSP"
+    }
+  },
+  "peers": { 
+    "blockchain-org1peer1": {
+      "tlsCACerts": {
+        "path":
+          "/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+      },
+      "url": "grpc://blockchain-org1peer1:30110",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.org1.example.com"
+      }
+    }
+  },
+  "orderers": {
+    "blockchain-orderer": {
+      "url": "grpc://blockchain-orderer:31010"
+    }
+  },
+  "certificateAuthorities": {
+    "CA1": {
+      "tlsCACerts": {
+        "path":
+          "/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+      },
+      "url": "http://blockchain-ca:7054",
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

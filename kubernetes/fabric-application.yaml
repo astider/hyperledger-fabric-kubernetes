@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: fabric-application
+  name: staging-fabric-application
 spec:
   volumes:
   - name: nfs-volume
     persistentVolumeClaim:
-      claimName: nfs-volume-claim
+      claimName: staging-nfs-volume-claim
   - name: dockersocket
     hostPath:
       path: /var/run/docker.sock
@@ -14,14 +14,59 @@ spec:
     - name: fabric-application
       image: node:8
       imagePullPolicy: Always
-      command: ["sh", "-c", "sleep 48h"]
+      command: ["sh", "-c", "/fabric/config/application/run.sh"]
       env:
       - name: TZ
         value: "Asia/Bangkok"
       - name: FABRIC_CFG_PATH
         value: "/fabric"
+      - name: APPLICATION_PATH
+        value: "/fabric/config/application"
       volumeMounts:
         - mountPath: /fabric
           name: nfs-volume
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: fabric-application
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       name: fabric-application
+#   template:
+#     metadata:
+#       labels:
+#         name: fabric-application
+#     spec:
+#       volumes:
+#       - name: nfs-volume
+#         persistentVolumeClaim:
+#           claimName: nfs-volume-claim
+#       - name: dockersocket
+#         hostPath:
+#           path: /var/run/docker.sock
+#       containers:
+#         - name: fabric-application
+#           image: node:8
+#           imagePullPolicy: Always
+#           command: [
+#             # "cp", "-r", "/fabric/config/application", "/application",
+#             "chmod", "a+rx", "/fabric/config/application/run.sh",
+#             "sh", "/fabric/config/application/run.sh"
+#           ]
+#           env:
+#           - name: TZ
+#             value: "Asia/Bangkok"
+#           - name: FABRIC_CFG_PATH
+#             value: "/fabric"
+#           - name: APPLICATION_PATH
+#             value: "/fabric/config/application"
+#           volumeMounts:
+#             - mountPath: /fabric
+#               name: nfs-volume
+#             - mountPath: /host/var/run/docker.sock
+#               name: dockersocket

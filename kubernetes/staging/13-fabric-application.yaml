@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staging-fabric-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: staging-fabric-application
+  template:
+    metadata:
+      labels:
+        name: staging-fabric-application
+    spec:
+      volumes:
+      - name: nfs-volume
+        persistentVolumeClaim:
+          claimName: staging-nfs-volume-claim
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+      containers:
+        - name: fabric-application
+          image: node:8
+          imagePullPolicy: Always
+          command: ["sh", "-c", "/fabric/config/application/run.sh"]
+          env:
+          - name: TZ
+            value: "Asia/Bangkok"
+          - name: FABRIC_CFG_PATH
+            value: "/fabric"
+          - name: APPLICATION_PATH
+            value: "/fabric/config/application"
+          volumeMounts:
+            - mountPath: /fabric
+              name: nfs-volume
+            - mountPath: /host/var/run/docker.sock
+              name: dockersocket

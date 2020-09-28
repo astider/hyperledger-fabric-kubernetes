@@ -675,6 +675,36 @@ Now its time to apply our `Deployment`:
 kubectl apply -f kubernetes/blockchain-explorer-app_deploy.yaml
 ```
 
+## Start the application and REST API
+Copy the application code to our shared filesystem.
+```sh
+kubectl cp ./config/application/ fabric-tools:/fabric/config/
+```
+
+Use fabric-tools to get inside (exec bash) and set the permission
+```sh
+kubectl exec -it fabric-tools -- /bin/bash
+chmod a+rx /fabric/config/application/run.sh
+exit
+```
+
+Now, the application code will sit in directory: /fabric/config/application/.
+After that, we will deploy the application.
+```sh
+kubectl apply -f kubernetes/13-fabric-application.yaml
+```
+
+New pod will be deployed and initialize the wallet credential for Fabric API then start the Node.js server at port 8888.
+To make it expose to the network, we will then apply the service for it.
+
+```sh
+kubectl apply -f kubernetes/14-fabric-application_svc.yaml
+```
+
+How to check if it work or not?
+You can just logs the pods and if it say something like 'Listening to port 8888' then it should be fine.
+You can also try to exec into the pods then try curl GET/POST to test the API.
+
 ## CLEANUP
 
 Now, to leave our environment clean, we're going to remove our helper `Pod`:
