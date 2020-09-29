@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: staging-blockchain-orderer
+  name: blockchain-orderer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: staging-orderer
+      name: orderer
   template:
     metadata:
       labels:
-        name: staging-orderer
+        name: orderer
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: staging-nfs-volume-claim
+          claimName: nfs-volume-claim
 
       containers:
       - name: orderer
@@ -50,7 +50,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "staging-blockchain-orderer:31010"
+          value: "blockchain-orderer:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT
@@ -68,7 +68,17 @@ spec:
         - name: ORDERER_GENERAL_GENESISPROFILE
           value: initial
         - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
         - name: GODEBUG
           value: "netdns=go"
         - name: ORDERER_GENERAL_LEDGERTYPE
@@ -81,21 +91,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: staging-blockchain-orderer2
+  name: blockchain-orderer2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: staging-orderer2
+      name: orderer2
   template:
     metadata:
       labels:
-        name: staging-orderer2
+        name: orderer2
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: staging-nfs-volume-claim
+          claimName: nfs-volume-claim
 
       containers:
       - name: orderer
@@ -130,7 +140,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "staging-blockchain-orderer2:31010"
+          value: "blockchain-orderer2:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT
@@ -148,7 +158,17 @@ spec:
         - name: ORDERER_GENERAL_GENESISPROFILE
           value: initial
         - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
         - name: GODEBUG
           value: "netdns=go"
         - name: ORDERER_GENERAL_LEDGERTYPE
@@ -156,26 +176,27 @@ spec:
         volumeMounts:
         - mountPath: /fabric
           name: nfs-volume
+
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: staging-blockchain-orderer3
+  name: blockchain-orderer3
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: staging-orderer3
+      name: orderer3
   template:
     metadata:
       labels:
-        name: staging-orderer3
+        name: orderer3
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: staging-nfs-volume-claim
+          claimName: nfs-volume-claim
 
       containers:
       - name: orderer
@@ -210,7 +231,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "staging-blockchain-orderer3:31010"
+          value: "blockchain-orderer3:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT
@@ -228,7 +249,17 @@ spec:
         - name: ORDERER_GENERAL_GENESISPROFILE
           value: initial
         - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
         - name: GODEBUG
           value: "netdns=go"
         - name: ORDERER_GENERAL_LEDGERTYPE
@@ -236,26 +267,27 @@ spec:
         volumeMounts:
         - mountPath: /fabric
           name: nfs-volume
+
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: staging-blockchain-orderer4
+  name: blockchain-orderer4
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: staging-orderer4
+      name: orderer4
   template:
     metadata:
       labels:
-        name: staging-orderer4
+        name: orderer4
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: staging-nfs-volume-claim
+          claimName: nfs-volume-claim
 
       containers:
       - name: orderer
@@ -290,7 +322,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "staging-blockchain-orderer2:31010"
+          value: "blockchain-orderer2:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT
@@ -308,7 +340,17 @@ spec:
         - name: ORDERER_GENERAL_GENESISPROFILE
           value: initial
         - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
         - name: GODEBUG
           value: "netdns=go"
         - name: ORDERER_GENERAL_LEDGERTYPE
@@ -321,21 +363,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: staging-blockchain-orderer5
+  name: blockchain-orderer5
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: staging-orderer5
+      name: orderer5
   template:
     metadata:
       labels:
-        name: staging-orderer5
+        name: orderer5
     spec:
       volumes:
       - name: nfs-volume
         persistentVolumeClaim:
-          claimName: staging-nfs-volume-claim
+          claimName: nfs-volume-claim
 
       containers:
       - name: orderer
@@ -370,7 +412,7 @@ spec:
         - name: ORDERER_KAFKA_VERBOSE
           value: "true"
         - name: CONFIGTX_ORDERER_ADDRESSES
-          value: "staging-blockchain-orderer5:31010"
+          value: "blockchain-orderer5:31010"
         - name: ORDERER_GENERAL_LISTENADDRESS
           value: 0.0.0.0
         - name: ORDERER_GENERAL_LISTENPORT
@@ -388,7 +430,17 @@ spec:
         - name: ORDERER_GENERAL_GENESISPROFILE
           value: initial
         - name: ORDERER_GENERAL_TLS_ENABLED
-          value: "false"
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
         - name: GODEBUG
           value: "netdns=go"
         - name: ORDERER_GENERAL_LEDGERTYPE

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-ca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ca
+  template:
+    metadata:
+      labels:
+        name: ca
+    spec:
+      volumes:
+      - name: nfs-volume
+        persistentVolumeClaim:
+          claimName: nfs-volume-claim
+
+      containers:
+      - name: ca
+        image: hyperledger/fabric-ca:amd64-1.4.2
+        # resources:
+        #   requests:
+        #     cpu: 200m
+        command: ["sh", "-c", "fabric-ca-server start -b admin:adminpw -d"]
+        env:
+        - name: TZ
+          value: "Asia/Bangkok"
+        - name: FABRIC_CA_SERVER_CA_NAME
+          value: "CA1"
+        - name: FABRIC_CA_SERVER_CA_CERTFILE
+          value: /fabric/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+        - name: FABRIC_CA_SERVER_CA_KEYFILE
+          value: /fabric/crypto-config/peerOrganizations/org1.example.com/ca/key.pem
+        - name: FABRIC_CA_SERVER_DEBUG
+          value: "true"
+        - name: FABRIC_CA_SERVER_TLS_ENABLED
+          value: "false"
+        - name: FABRIC_CA_SERVER_TLS_CERTFILE
+          value: /fabric/crypto-config/peerOrganizations/org1.example.com/tlsca/ca.org1.example.com-cert.pem
+        - name: FABRIC_CA_SERVER_TLS_KEYFILE
+        value: /fabric/crypto-config/peerOrganizations/org1.example.com/tlsca/keypem
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /fabric
+          name: nfs-volume

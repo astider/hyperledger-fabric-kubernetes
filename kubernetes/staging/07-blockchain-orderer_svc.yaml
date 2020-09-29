@@ -12,3 +12,67 @@ spec:
   - protocol: TCP
     port: 31010
     name: grpc
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: staging-blockchain-orderer2
+  labels:
+    run: staging-blockchain-orderer2
+spec:
+  type: ClusterIP
+  selector:
+    name: staging-orderer2
+  ports:
+  - protocol: TCP
+    port: 31010
+    name: grpc
+---
+        
+apiVersion: v1
+kind: Service
+metadata:
+name: staging-blockchain-orderer3
+labels:
+  run: staging-blockchain-orderer3
+spec:
+type: ClusterIP
+selector:
+  name: staging-orderer3
+ports:
+- protocol: TCP
+  port: 31010
+  name: grpc
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+name: staging-blockchain-orderer4
+labels:
+  run: staging-blockchain-orderer4
+spec:
+type: ClusterIP
+selector:
+  name: staging-orderer4
+ports:
+- protocol: TCP
+  port: 31010
+  name: grpc
+---
+  
+apiVersion: v1
+kind: Service
+metadata:
+name: staging-blockchain-orderer5
+labels:
+  run: staging-blockchain-orderer5
+spec:
+type: ClusterIP
+selector:
+  name: staging-orderer5
+ports:
+- protocol: TCP
+  port: 31010
+  name: grpc

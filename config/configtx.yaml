@@ -18,7 +18,7 @@ Organizations:
 
 Orderer: &OrdererDefaults
 
-    OrdererType: solo
+    OrdererType: etcdraft
     Addresses:
         - blockchain-orderer:31010
 

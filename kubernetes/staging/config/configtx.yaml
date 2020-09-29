@@ -1,87 +1,88 @@
 ---
-Organizations:
-
-    - &OrdererOrg
-        Name: OrdererOrg
-        ID: OrdererMSP
-        MSPDir: crypto-config/ordererOrganizations/example.com/msp
-        AdminPrincipal: Role.MEMBER
-
-    - &Org1
-        Name: Org1MSP
-        ID: Org1MSP
-        MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
-        AdminPrincipal: Role.MEMBER
-        AnchorPeers:
-            - Host: staging-blockchain-org1peer1
-              Port: 30110
-
-Orderer: &OrdererDefaults
-
-    OrdererType: solo
-    Addresses:
-        - staging-blockchain-orderer:31010
-
-    BatchTimeout: 2s
-    BatchSize:
-        MaxMessageCount: 50
-        AbsoluteMaxBytes: 99 MB
-        PreferredMaxBytes: 2 MB
-
-    # Kafka:
-    #     Brokers:
-    #         - kafka1.local.parisi.biz:9092
-    #         - kafka2.local.parisi.biz:9092
-    #         - kafka3.local.parisi.biz:9092
-    #         - kafka4.local.parisi.biz:9092
-    EtcdRaft:
-        # The set of Raft replicas for this network. For the etcd/raft-based
-        # implementation, we expect every replica to also be an OSN. Therefore,
-        # a subset of the host:port items enumerated in this list should be
-        # replicated under the Orderer.Addresses key above.
-        Consenters:
-            - Host: staging-blockchain-orderer
-              Port: 31010
-              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-            - Host: staging-blockchain-orderer2
-              Port: 31010
-              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-            - Host: staging-blockchain-orderer3
-              Port: 31010
-              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-            - Host: staging-blockchain-orderer4
-              Port: 31010
-              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
-            - Host: staging-blockchain-orderer5
-              Port: 31010
-              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
-
     Organizations:
-
-Application: &ApplicationDefaults
-
-    Organizations:
-
-Profiles:
-
-    OneOrgOrdererGenesis:
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - *OrdererOrg
-        Consortiums:
-            SampleConsortium:
+    
+        - &OrdererOrg
+            Name: OrdererOrg
+            ID: OrdererMSP
+            MSPDir: crypto-config/ordererOrganizations/example.com/msp
+            AdminPrincipal: Role.MEMBER
+    
+        - &Org1
+            Name: Org1MSP
+            ID: Org1MSP
+            MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
+            AdminPrincipal: Role.MEMBER
+            AnchorPeers:
+                - Host: blockchain-org1peer1
+                  Port: 30110
+    
+    Orderer: &OrdererDefaults
+    
+        OrdererType: etcdraft
+        Addresses:
+            - blockchain-orderer:31010
+    
+        BatchTimeout: 2s
+        BatchSize:
+            MaxMessageCount: 50
+            AbsoluteMaxBytes: 99 MB
+            PreferredMaxBytes: 2 MB
+    
+        # Kafka:
+        #     Brokers:
+        #         - kafka1.local.parisi.biz:9092
+        #         - kafka2.local.parisi.biz:9092
+        #         - kafka3.local.parisi.biz:9092
+        #         - kafka4.local.parisi.biz:9092
+        EtcdRaft:
+            # The set of Raft replicas for this network. For the etcd/raft-based
+            # implementation, we expect every replica to also be an OSN. Therefore,
+            # a subset of the host:port items enumerated in this list should be
+            # replicated under the Orderer.Addresses key above.
+            Consenters:
+                - Host: blockchain-orderer
+                  Port: 31010
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                - Host: blockchain-orderer2
+                  Port: 31010
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                - Host: blockchain-orderer3
+                  Port: 31010
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                - Host: blockchain-orderer4
+                  Port: 31010
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+                - Host: blockchain-orderer5
+                  Port: 31010
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+    
+        Organizations:
+    
+    Application: &ApplicationDefaults
+    
+        Organizations:
+    
+    Profiles:
+    
+        OneOrgOrdererGenesis:
+            Orderer:
+                <<: *OrdererDefaults
+                Organizations:
+                    - *OrdererOrg
+            Consortiums:
+                SampleConsortium:
+                    Organizations:
+                        - *Org1
+        OneOrgChannel:
+            Consortium: SampleConsortium
+            Application:
+                <<: *ApplicationDefaults
                 Organizations:
                     - *Org1
-    OneOrgChannel:
-        Consortium: SampleConsortium
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *Org1
+        
     
