@@ -296,7 +296,7 @@ Now we need to update our channel configuration to reflect our Anchor Peers:
 ```sh
 # Prod
 pod=$(kubectl get pods | grep production-blockchain-org1peer1 | awk '{print $1}')
-kubectl exec -it $pod -- peer channel update -f /fabric/Org1MSPanchors.tx -c channel2 -o production-blockchain-orderer:31010 
+kubectl exec -it $pod -c peer -- peer channel update -f /fabric/Org1MSPanchors.tx -c channel2 -o production-blockchain-orderer:31010 
 
 # Staging
 pod=$(kubectl get pods | grep staging-blockchain-org1peer1 | awk '{print $1}')
