@@ -18,7 +18,9 @@ Organizations:
 
 Orderer: &OrdererDefaults
 
-    OrdererType: solo
+    # Orderer Type: The orderer implementation to start
+    # Available types are "solo" and "kafka"
+    OrdererType: kafka
     Addresses:
         - staging-blockchain-orderer:31010
 
@@ -28,12 +30,12 @@ Orderer: &OrdererDefaults
         AbsoluteMaxBytes: 99 MB
         PreferredMaxBytes: 2 MB
 
-    # Kafka:
-    #     Brokers:
-    #         - kafka1.local.parisi.biz:9092
-    #         - kafka2.local.parisi.biz:9092
-    #         - kafka3.local.parisi.biz:9092
-    #         - kafka4.local.parisi.biz:9092
+    Kafka:
+        Brokers:
+            - kafka-0.broker.kafka:9092
+            - kafka-1.broker.kafka:9092
+            - kafka-2.broker.kafka:9092
+            - kafka-3.broker.kafka:9092
     EtcdRaft:
         # The set of Raft replicas for this network. For the etcd/raft-based
         # implementation, we expect every replica to also be an OSN. Therefore,

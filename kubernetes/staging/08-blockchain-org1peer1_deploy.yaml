@@ -27,6 +27,7 @@ spec:
         #   requests:
         #     cpu: 200m
         command: ["sh", "-c", "/fabric/peer_start_staging.sh"]
+        # command: ["sh", "-c", "peer node start"]
         # lifecycle:
         #   postStart:
         #     exec:
