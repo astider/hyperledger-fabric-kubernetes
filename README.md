@@ -127,13 +127,14 @@ Lets create the Anchor Peers configuration files using configtxgen:
 ```sh
 # Prod
 kubectl exec -it production-fabric-tools -- /bin/bash
+cd /fabric
+configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./Org1MSPanchors.tx -channelID channel2 -asOrg Org1MSP
 
 # Staging
 kubectl exec -it staging-fabric-tools -- /bin/bash
-
-# After exec inside the pod
 cd /fabric
 configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./Org1MSPanchors.tx -channelID channel1 -asOrg Org1MSP
+
 exit
 ```
 
@@ -181,12 +182,13 @@ Now its time to create our channel:
 ```sh
 # Prod
 kubectl exec -it production-fabric-tools -- /bin/bash
+export CHANNEL_NAME="channel2"
 
 # Staging
 kubectl exec -it staging-fabric-tools -- /bin/bash
+export CHANNEL_NAME="channel1"
 
 # After exec inside
-export CHANNEL_NAME="channel1"
 cd /fabric
 configtxgen -profile OneOrgChannel -outputCreateChannelTx ${CHANNEL_NAME}.tx -channelID ${CHANNEL_NAME}
 
@@ -215,14 +217,15 @@ Let's join Org1MSP to our channel:
 kubectl exec -it production-fabric-tools -- /bin/bash
 export ORDERER_URL="production-blockchain-orderer:31010"
 export CORE_PEER_ADDRESS="production-blockchain-org1peer1:30110"
+export CHANNEL_NAME="channel2"
 
 # Staging
 kubectl exec -it staging-fabric-tools -- /bin/bash
 export ORDERER_URL="staging-blockchain-orderer:31010"
 export CORE_PEER_ADDRESS="staging-blockchain-org1peer1:30110"
+export CHANNEL_NAME="channel1"
 
 # After exec inside
-export CHANNEL_NAME="channel1"
 export CORE_PEER_NETWORKID="nid1"
 export FABRIC_CFG_PATH="/etc/hyperledger/fabric"
 export CORE_PEER_LOCALMSPID="Org1MSP"
@@ -267,15 +270,16 @@ kubectl exec -it production-fabric-tools -- /bin/bash
 
 export CORE_PEER_ADDRESS="production-blockchain-org1peer1:30110"
 export ORDERER_URL="production-blockchain-orderer:31010"
+export CHANNEL_NAME="channel2"
 
 # Staging
 kubectl exec -it staging-fabric-tools -- /bin/bash
 
 export CORE_PEER_ADDRESS="staging-blockchain-org1peer1:30110"
 export ORDERER_URL="staging-blockchain-orderer:31010"
+export CHANNEL_NAME="channel1"
 
 # After exec inside
-export CHANNEL_NAME="channel1"
 export CHAINCODE_NAME="cc"
 export CHAINCODE_VERSION="1.0"
 export FABRIC_CFG_PATH="/etc/hyperledger/fabric"
@@ -292,7 +296,7 @@ Now we need to update our channel configuration to reflect our Anchor Peers:
 ```sh
 # Prod
 pod=$(kubectl get pods | grep production-blockchain-org1peer1 | awk '{print $1}')
-kubectl exec -it $pod -- peer channel update -f /fabric/Org1MSPanchors.tx -c channel1 -o production-blockchain-orderer:31010 
+kubectl exec -it $pod -- peer channel update -f /fabric/Org1MSPanchors.tx -c channel2 -o production-blockchain-orderer:31010 
 
 # Staging
 pod=$(kubectl get pods | grep staging-blockchain-org1peer1 | awk '{print $1}')
@@ -304,9 +308,9 @@ After this you can test chaincode with command inside peer
 ```sh
 # Prod
 # Invoke
-peer chaincode invoke --peerAddresses production-blockchain-org1peer1:30110 -o production-blockchain-orderer:31010 -C channel1 -n cc -c '{"Args":["addRecord", "20200925-12", "data goes here"]}'
+peer chaincode invoke --peerAddresses production-blockchain-org1peer1:30110 -o production-blockchain-orderer:31010 -C channel2 -n cc -c '{"Args":["addRecord", "20200925-14", "[{'\''a'\'': '\''9'\''}, {'\''b'\'': '\''8'\''}]"]}'
 # Query
-peer chaincode query -C channel1 -n cc -c '{"Args":["queryRecord", "20200925-12"]}'
+peer chaincode query -C channel2 -n cc -c '{"Args":["queryRecord", "20200925-14"]}'
 
 # Staging
 # Invoke
@@ -691,7 +695,7 @@ Use fabric-tools to get inside (exec bash) and set the permission
 kubectl exec -it production-fabric-tools -- /bin/bash
 
 # Staging
-kubectl exec -it production-fabric-tools -- /bin/bash
+kubectl exec -it staging-fabric-tools -- /bin/bash
 
 chmod a+rx /fabric/config/application/run.sh
 exit

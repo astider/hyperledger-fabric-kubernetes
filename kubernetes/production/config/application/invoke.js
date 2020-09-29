@@ -9,6 +9,8 @@ const path = require('path');
 
 const ccpPath = path.resolve(__dirname, 'config.json');
 
+const CHANNEL = process.env.CHANNEL_ID ? process.env.CHANNEL_ID : 'channel1';
+
 async function add(req, res) {
   try {
     const { body, user } = req;
@@ -35,7 +37,7 @@ async function add(req, res) {
     await gateway.connect(ccpPath, { wallet, identity: user, discovery: { enabled: true, asLocalhost: false } });
 
     // Get the network (channel) our contract is deployed to.
-    const network = await gateway.getNetwork('channel1');
+    const network = await gateway.getNetwork(CHANNEL);
 
     // Get the contract from the network.
     const contract = network.getContract('cc');

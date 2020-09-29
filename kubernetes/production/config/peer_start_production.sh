@@ -7,7 +7,7 @@ sleep 10
 export ORDERER_URL="production-blockchain-orderer:31010"
 export CORE_PEER_ADDRESS="production-blockchain-org1peer1:30110"
 
-export CHANNEL_NAME="channel1"
+export CHANNEL_NAME="channel2"
 export CORE_PEER_NETWORKID="nid1"
 export FABRIC_CFG_PATH="/etc/hyperledger/fabric"
 export CORE_PEER_LOCALMSPID="Org1MSP"

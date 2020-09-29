@@ -21,12 +21,22 @@ spec:
           path: /var/run/docker.sock
 
       containers:
+      - name: couchdb
+        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        env:
+        - name: TZ
+          value: "Asia/Bangkok"
+        - name: COUCHDB_USER
+          value: "hyperledgeruser"
+        - name: COUCHDB_PASSWORD
+          value: "hyperledgerpass"
       - name: peer
         image: hyperledger/fabric-peer:amd64-1.4.2
         # resources:
         #   requests:
         #     cpu: 200m
         command: ["sh", "-c", "/fabric/peer_start_production.sh"]
+        # command: ["sh", "-c", "peer node start"]
         env:
         - name: TZ
           value: "Asia/Bangkok"
@@ -113,12 +123,3 @@ spec:
           name: nfs-volume
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
-      - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
-        env:
-        - name: TZ
-          value: "Asia/Bangkok"
-        - name: COUCHDB_USER
-          value: "hyperledgeruser"
-        - name: COUCHDB_PASSWORD
-          value: "hyperledgerpass"

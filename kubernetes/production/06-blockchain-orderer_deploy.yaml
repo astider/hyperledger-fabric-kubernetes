@@ -40,9 +40,9 @@ spec:
         - name: ORDERER_GENERAL_MAXWINDOWSIZE
           value: "1000"
         - name: CONFIGTX_GENERAL_ORDERERTYPE
-          value: solo
+          value: kafka
         - name: CONFIGTX_ORDERER_KAFKA_BROKERS
-          value: "kafka1.local.parisi.biz:9092,kafka2.local.parisi.biz:9092,kafka3.local.parisi.biz:9092,kafka4.local.parisi.biz:9092"
+          value: "kafka-0.broker.kafka:9092,kafka-1.broker.kafka:9092,kafka-2.broker.kafka:9092,kafka-3.broker.kafka:9092"
         - name: ORDERER_KAFKA_RETRY_SHORTINTERVAL
           value: 1s
         - name: ORDERER_KAFKA_RETRY_SHORTTOTAL

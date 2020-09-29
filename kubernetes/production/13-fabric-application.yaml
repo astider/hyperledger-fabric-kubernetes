@@ -31,6 +31,8 @@ spec:
             value: "/fabric"
           - name: APPLICATION_PATH
             value: "/fabric/config/application"
+          - name: CHANNEL_ID
+            value: "channel2"
           volumeMounts:
             - mountPath: /fabric
               name: nfs-volume
